@@ -1,15 +1,15 @@
 module.exports = {
   root: true,
-  extends: ['@react-native-community', 'plugin:react/recommended'],
+  extends: ['@react-native-community'],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react'],
+  plugins: ['@typescript-eslint'],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
       rules: {
         '@typescript-eslint/no-shadow': ['error'],
-        'react/jsx-uses-react': 'error',
-        'react/jsx-uses-vars': 'error',
+        '@typescript-eslint/no-unused-vars': 'warn',
+        'react-native/no-inline-styles': 0,
         'no-shadow': 'off',
         'no-undef': 'off',
       },

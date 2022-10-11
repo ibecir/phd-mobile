@@ -1,6 +1,6 @@
-import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {AuthService} from '@services';
-import {LoginParams, LoginResponse} from '../../services/types';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { AuthService } from '@services';
+import { LoginParams, LoginResponse } from '../../services/types';
 
 interface AuthState {
   token: string;
@@ -35,21 +35,22 @@ const authSlice = createSlice({
           state.token = action.payload.accessToken;
         },
       )
+      .addCase(signin.rejected, state => {
+        state.isLoading = false;
+      })
       .addCase(signin.pending, state => {
         state.isLoading = true;
       });
   },
 });
 
-export const {setToken, setLoading} = authSlice.actions;
+export const { setToken, setLoading } = authSlice.actions;
 
 export const signin = createAsyncThunk(
   'auth/signin',
-  async (credentials: LoginParams, {rejectWithValue}) => {
+  async (credentials: LoginParams, { rejectWithValue }) => {
     return AuthService.login(credentials).catch(error => {
-      return rejectWithValue(
-        error?.response?.data || error || 'Something went wrong',
-      );
+      return rejectWithValue(error?.message);
     });
   },
 );
