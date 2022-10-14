@@ -1,14 +1,13 @@
-import {View, Button, ScrollView, Text} from 'react-native';
+import { View, Button, ScrollView, Text } from 'react-native';
 import React from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {MainParamList} from '@navigation';
-import {useFetchResults} from '../../services';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { MainParamList } from '@navigation';
 
 type NavigationProps = NativeStackScreenProps<MainParamList, 'Results'>;
 
-const Results = ({navigation, route}: NavigationProps) => {
-  const {data, isLoading} = useFetchResults();
-  console.log(data, isLoading, route);
+const Results = ({ navigation, route }: NavigationProps) => {
+  // const {data, isLoading} = useFetchResults();
+  // console.log(data, isLoading, route);
   return (
     <View>
       <Button
@@ -21,11 +20,7 @@ const Results = ({navigation, route}: NavigationProps) => {
         accessibilityLabel="Learn more about this purple button"
       />
       <ScrollView>
-        <View>
-          {data?.map(result => {
-            return <Text key={result.id}>{result.email}</Text>;
-          })}
-        </View>
+        <View />
       </ScrollView>
     </View>
   );

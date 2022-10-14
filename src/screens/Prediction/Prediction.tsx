@@ -1,22 +1,49 @@
-import {Box, MyTextInput} from '@components';
-import {Formik} from 'formik';
+import React, { useState, useRef } from 'react';
+import { ScrollView } from 'react-native';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import React from 'react';
-import {Button} from '@components';
-import {ScrollView} from 'react-native';
-import {PredictionFormType} from 'services/types';
-import {PredictionService} from '@services';
+import PagerView from 'react-native-pager-view';
 
+import { Button, Box, MyTextInput, Text } from '@components';
+import { PredictionFormType } from 'services/types';
+import { PredictionService } from '@services';
+
+import { DeviceSelection } from './components';
 const ValidationSchema = Yup.object().shape({
   year: Yup.string().required('Field required'),
 });
 
 const Prediction = () => {
+  const viewPager = useRef<PagerView>(null);
+  const [device, setDevice] = useState<string | null>(null);
   const handlePrediction = (values: PredictionFormType) => {
     PredictionService.sendPrediction(values).then(data =>
       console.log('BELE 123 ', data),
     );
   };
+
+  return (
+    <Box flex={1} bg="mainBackground">
+      <PagerView
+        ref={viewPager}
+        scrollEnabled={false}
+        style={{ flex: 1 }}
+        initialPage={0}
+      >
+        <Box key="1">
+          <DeviceSelection
+            onDone={value => {
+              setDevice(value);
+              viewPager?.current?.setPage(1);
+            }}
+          />
+        </Box>
+        <Box key="2">
+          <Text>Setep 2</Text>
+        </Box>
+      </PagerView>
+    </Box>
+  );
   return (
     <Box flex={1} bg="mainBackground" padding="m">
       <Formik
@@ -63,8 +90,9 @@ const Prediction = () => {
           sixth_decision: '',
         }}
         validationSchema={ValidationSchema}
-        onSubmit={handlePrediction}>
-        {({handleChange, handleSubmit, values, errors, touched, isValid}) => {
+        onSubmit={handlePrediction}
+      >
+        {({ handleChange, handleSubmit, values, errors, touched, isValid }) => {
           return (
             <ScrollView>
               <MyTextInput

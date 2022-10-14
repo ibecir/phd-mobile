@@ -25,6 +25,7 @@ const Login = ({ navigation, route }: NavigationProps) => {
   const handleLogin = (values: LoginFormType) => {
     dispatch(signin(values))
       .unwrap()
+      .then(console.log)
       .catch(error => {
         toast.show(error, { type: 'danger' });
       });
