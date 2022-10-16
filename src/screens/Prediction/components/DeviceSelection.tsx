@@ -19,18 +19,11 @@ const DeviceSelection = ({ onDone }: Props) => {
     }
   }, [selectedValue]);
   return (
-    <Box padding="m">
-      <Box marginVertical="m" alignItems="center">
-        <Text variant="header" color="mainForeground">
-          Select device
-        </Text>
-      </Box>
-      <Select
-        choices={DEVICES}
-        selected={selectedValue}
-        onSelect={value => setSelectedValue(value as string)}
-      />
-    </Box>
+    <Select
+      choices={DEVICES}
+      selected={selectedValue}
+      onSelect={value => setSelectedValue(value as string)}
+    />
   );
 };
 

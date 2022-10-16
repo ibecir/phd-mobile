@@ -11,16 +11,13 @@ export type LoginResponse = {
 };
 
 export type PredictionFormType = {
-  year: number;
   device: string;
   manufacturer: string;
   type: string;
-  output_class: string;
   first_visual_inspection: string;
   second_visual_inspection: string;
   third_visual_inspection: string;
   fourth_visual_inspection: string;
-  parameter_of_inspection: string;
   first_set_value: number;
   first_measured_value: number;
   first_error: number;

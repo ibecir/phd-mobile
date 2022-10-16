@@ -13,19 +13,22 @@ type Props = {
   choices: Choice[];
   selected?: number | string;
   onSelect?: (value: number | string) => void;
+  horizontal?: boolean;
 };
-const Select = ({ choices, selected, onSelect }: Props) => {
+const Select = ({ choices, selected, onSelect, horizontal = false }: Props) => {
   const { spacing, colors, borderRadii } = useAppTheme();
   return (
-    <Box>
+    <Box flexDirection={horizontal ? 'row' : 'column'}>
       {choices.map(({ label, value }, index) => {
         return (
           <TouchableOpacity
             key={index}
             onPress={() => onSelect && onSelect(value)}
             style={{
+              flex: horizontal ? 1 : 0,
               borderRadius: borderRadii.m,
               borderWidth: 1,
+              marginHorizontal: horizontal ? spacing.xs : 0,
               borderColor: colors.primary,
               marginTop: spacing.s,
               alignItems: 'center',

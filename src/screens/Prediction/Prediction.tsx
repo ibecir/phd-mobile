@@ -8,7 +8,12 @@ import { Button, Box, MyTextInput, Text } from '@components';
 import { PredictionFormType } from 'services/types';
 import { PredictionService } from '@services';
 
-import { DeviceSelection } from './components';
+import {
+  DeviceSelection,
+  FlowMeasurements,
+  Question,
+  VisualInpsection,
+} from './components';
 const ValidationSchema = Yup.object().shape({
   year: Yup.string().required('Field required'),
 });
@@ -16,10 +21,56 @@ const ValidationSchema = Yup.object().shape({
 const Prediction = () => {
   const viewPager = useRef<PagerView>(null);
   const [device, setDevice] = useState<string | null>(null);
-  const handlePrediction = (values: PredictionFormType) => {
-    PredictionService.sendPrediction(values).then(data =>
-      console.log('BELE 123 ', data),
-    );
+  const [manufacturer, setManufacturer] = useState<string | undefined>();
+  const [type, setType] = useState<string | undefined>();
+  const [visual, setVisual] = useState({
+    first_visual_inspection: 'YES',
+    second_visual_inspection: 'YES',
+    third_visual_inspection: 'NO',
+    fourth_visual_inspection: 'YES',
+  });
+  const [measurementsOne, setMeasurementsOne] = useState({
+    first_set_value: 20,
+    first_measured_value: 0,
+    first_error: 0,
+    first_allowed_deviation: 5,
+    first_decision: 'YES',
+  });
+  const [measurementsTwo, setMeasurementsTwo] = useState({
+    second_set_value: 20,
+    second_measured_value: 0,
+    second_error: 0,
+    second_allowed_deviation: 5,
+    second_decision: 'YES',
+  });
+  const [measurementsThree, setMeasurementsThree] = useState({
+    third_set_value: 20,
+    third_measured_value: 0,
+    third_error: 0,
+    third_allowed_deviation: 5,
+    third_decision: 'YES',
+  });
+  const [measurementsFour, setMeasurementsFour] = useState({
+    fourth_set_value: 20,
+    fourth_measured_value: 0,
+    fourth_error: 0,
+    fourth_allowed_deviation: 5,
+    fourth_decision: 'YES',
+  });
+  const [measurementsFive, setMeasurementsFive] = useState({
+    fifth_set_value: 20,
+    fifth_measured_value: 0,
+    fifth_error: 0,
+    fifth_allowed_deviation: 5,
+    fifth_decision: 'YES',
+  });
+  const handlePrediction = (values: any) => {
+    console.log(values);
+    PredictionService.sendPrediction(values)
+      .then(data => console.log('BELE 123 ', data))
+      .catch(error => {
+        console.log('response: ', error.response);
+      });
   };
 
   return (
@@ -31,15 +82,153 @@ const Prediction = () => {
         initialPage={0}
       >
         <Box key="1">
-          <DeviceSelection
-            onDone={value => {
-              setDevice(value);
-              viewPager?.current?.setPage(1);
-            }}
-          />
+          <Question title="Select type and manufacturer">
+            <DeviceSelection
+              onDone={value => {
+                setDevice(value);
+                viewPager?.current?.setPage(1);
+              }}
+            />
+          </Question>
         </Box>
         <Box key="2">
-          <Text>Setep 2</Text>
+          <Question title="Select manufacturer and type">
+            <MyTextInput
+              label="Manufacturer"
+              value={manufacturer}
+              onChangeText={setManufacturer}
+              placeholder="Eg. B. Braun, SINO MEDICAL ..."
+            />
+            <MyTextInput
+              label="Type"
+              value={type}
+              onChangeText={setType}
+              placeholder="Eg. COMPACT S, SN50C6 ..."
+            />
+            <Button
+              label="Next"
+              disabled={manufacturer == null || type == null}
+              onPress={() => {
+                viewPager.current?.setPage(2);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="3">
+          <Question title="Visual Inspection">
+            <VisualInpsection
+              onDone={result => {
+                setVisual({
+                  first_visual_inspection: result.clean,
+                  second_visual_inspection: result.funcitional,
+                  third_visual_inspection: result.markings,
+                  fourth_visual_inspection: result.accessories,
+                });
+                viewPager.current?.setPage(3);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="4">
+          <Question title="First flow measurment">
+            <FlowMeasurements
+              defValue={measurementsOne.first_set_value + ''}
+              defDeviation={measurementsOne.first_allowed_deviation + ''}
+              onDone={results => {
+                setMeasurementsOne({
+                  first_set_value: parseFloat(results.value),
+                  first_allowed_deviation: parseFloat(results.deviation),
+                  first_error: parseFloat(results.error),
+                  first_decision: results.satisfies,
+                  first_measured_value: parseFloat(results.measured),
+                });
+                viewPager.current?.setPage(4);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="5">
+          <Question title="Second flow measurment">
+            <FlowMeasurements
+              defValue={measurementsTwo.second_set_value + ''}
+              defDeviation={measurementsTwo.second_allowed_deviation + ''}
+              onDone={results => {
+                setMeasurementsTwo({
+                  second_set_value: parseFloat(results.value),
+                  second_allowed_deviation: parseFloat(results.deviation),
+                  second_error: parseFloat(results.error),
+                  second_decision: results.satisfies,
+                  second_measured_value: parseFloat(results.measured),
+                });
+                viewPager.current?.setPage(5);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="6">
+          <Question title="Third flow measurment">
+            <FlowMeasurements
+              defValue={measurementsThree.third_set_value + ''}
+              defDeviation={measurementsThree.third_allowed_deviation + ''}
+              onDone={results => {
+                setMeasurementsThree({
+                  third_set_value: parseFloat(results.value),
+                  third_allowed_deviation: parseFloat(results.deviation),
+                  third_error: parseFloat(results.error),
+                  third_decision: results.satisfies,
+                  third_measured_value: parseFloat(results.measured),
+                });
+                viewPager.current?.setPage(6);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="7">
+          <Question title="Fourth flow measurment">
+            <FlowMeasurements
+              defValue={measurementsFour.fourth_set_value + ''}
+              defDeviation={measurementsFour.fourth_allowed_deviation + ''}
+              onDone={results => {
+                setMeasurementsFour({
+                  fourth_set_value: parseFloat(results.value),
+                  fourth_allowed_deviation: parseFloat(results.deviation),
+                  fourth_error: parseFloat(results.error),
+                  fourth_decision: results.satisfies,
+                  fourth_measured_value: parseFloat(results.measured),
+                });
+                viewPager.current?.setPage(7);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="8">
+          <Question title="Fifth flow measurment">
+            <FlowMeasurements
+              defValue={measurementsFive.fifth_set_value + ''}
+              defDeviation={measurementsFive.fifth_allowed_deviation + ''}
+              onDone={results => {
+                setMeasurementsFive({
+                  fifth_set_value: parseFloat(results.value),
+                  fifth_allowed_deviation: parseFloat(results.deviation),
+                  fifth_error: parseFloat(results.error),
+                  fifth_decision: results.satisfies,
+                  fifth_measured_value: parseFloat(results.measured),
+                });
+                handlePrediction({
+                  device,
+                  manufacturer,
+                  type,
+                  ...visual,
+                  ...measurementsOne,
+                  ...measurementsTwo,
+                  ...measurementsThree,
+                  ...measurementsFour,
+                  ...measurementsFive,
+                });
+                //viewPager.current?.setPage(7);
+              }}
+            />
+          </Question>
         </Box>
       </PagerView>
     </Box>
