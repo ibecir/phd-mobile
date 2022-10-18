@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import PagerView from 'react-native-pager-view';
@@ -18,7 +18,7 @@ const ValidationSchema = Yup.object().shape({
   year: Yup.string().required('Field required'),
 });
 
-const Prediction = () => {
+const Prediction = ({ navigation }) => {
   const viewPager = useRef<PagerView>(null);
   const [device, setDevice] = useState<string | null>(null);
   const [manufacturer, setManufacturer] = useState<string | undefined>();
@@ -67,7 +67,18 @@ const Prediction = () => {
   const handlePrediction = (values: any) => {
     console.log(values);
     PredictionService.sendPrediction(values)
-      .then(data => console.log('BELE 123 ', data))
+      .then(data => {
+        const result =
+          data?.prediction == 1
+            ? 'Device passes inspection'
+            : 'Device failed inspection';
+        Alert.alert('Prediction result', result, [
+          {
+            text: 'OK',
+            onPress: () => navigation?.goBack(),
+          },
+        ]);
+      })
       .catch(error => {
         console.log('response: ', error.response);
       });

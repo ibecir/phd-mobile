@@ -15,8 +15,7 @@ const Results = ({ navigation, route }: NavigationProps) => {
           //navigation.goBack();
           navigation.navigate('PredictionForm');
         }}
-        title="Learn More"
-        color="#841584"
+        title="New Prediction"
         accessibilityLabel="Learn more about this purple button"
       />
       <ScrollView>
