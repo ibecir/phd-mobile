@@ -30,42 +30,38 @@ const Prediction = ({ navigation }) => {
     fourth_visual_inspection: 'YES',
   });
   const [measurementsOne, setMeasurementsOne] = useState({
-    first_set_value: 20,
+    first_set_value: 5,
     first_measured_value: 0,
-    first_error: 0,
-    first_allowed_deviation: 5,
-    first_decision: 'YES',
+    first_allowed_deviation: 2,
   });
   const [measurementsTwo, setMeasurementsTwo] = useState({
-    second_set_value: 20,
+    second_set_value: 10,
     second_measured_value: 0,
-    second_error: 0,
-    second_allowed_deviation: 5,
-    second_decision: 'YES',
+    second_allowed_deviation: 2,
   });
   const [measurementsThree, setMeasurementsThree] = useState({
-    third_set_value: 20,
+    third_set_value: 30,
     third_measured_value: 0,
-    third_error: 0,
-    third_allowed_deviation: 5,
-    third_decision: 'YES',
+    third_allowed_deviation: 2,
   });
   const [measurementsFour, setMeasurementsFour] = useState({
-    fourth_set_value: 20,
+    fourth_set_value: 50,
     fourth_measured_value: 0,
-    fourth_error: 0,
-    fourth_allowed_deviation: 5,
-    fourth_decision: 'YES',
+    fourth_allowed_deviation: 2,
   });
   const [measurementsFive, setMeasurementsFive] = useState({
-    fifth_set_value: 20,
+    fifth_set_value: 70,
     fifth_measured_value: 0,
-    fifth_error: 0,
-    fifth_allowed_deviation: 5,
-    fifth_decision: 'YES',
+    fifth_allowed_deviation: 2,
   });
+
+  const [measurementsSix, setMeasurementsSix] = useState({
+    sixth_set_value: 90,
+    sixth_measured_value: 0,
+    sixth_allowed_deviation: 2,
+  });
+
   const handlePrediction = (values: any) => {
-    console.log(values);
     PredictionService.sendPrediction(values)
       .then(data => {
         const result =
@@ -149,8 +145,6 @@ const Prediction = ({ navigation }) => {
                 setMeasurementsOne({
                   first_set_value: parseFloat(results.value),
                   first_allowed_deviation: parseFloat(results.deviation),
-                  first_error: parseFloat(results.error),
-                  first_decision: results.satisfies,
                   first_measured_value: parseFloat(results.measured),
                 });
                 viewPager.current?.setPage(4);
@@ -167,8 +161,6 @@ const Prediction = ({ navigation }) => {
                 setMeasurementsTwo({
                   second_set_value: parseFloat(results.value),
                   second_allowed_deviation: parseFloat(results.deviation),
-                  second_error: parseFloat(results.error),
-                  second_decision: results.satisfies,
                   second_measured_value: parseFloat(results.measured),
                 });
                 viewPager.current?.setPage(5);
@@ -185,8 +177,6 @@ const Prediction = ({ navigation }) => {
                 setMeasurementsThree({
                   third_set_value: parseFloat(results.value),
                   third_allowed_deviation: parseFloat(results.deviation),
-                  third_error: parseFloat(results.error),
-                  third_decision: results.satisfies,
                   third_measured_value: parseFloat(results.measured),
                 });
                 viewPager.current?.setPage(6);
@@ -203,8 +193,6 @@ const Prediction = ({ navigation }) => {
                 setMeasurementsFour({
                   fourth_set_value: parseFloat(results.value),
                   fourth_allowed_deviation: parseFloat(results.deviation),
-                  fourth_error: parseFloat(results.error),
-                  fourth_decision: results.satisfies,
                   fourth_measured_value: parseFloat(results.measured),
                 });
                 viewPager.current?.setPage(7);
@@ -221,9 +209,23 @@ const Prediction = ({ navigation }) => {
                 setMeasurementsFive({
                   fifth_set_value: parseFloat(results.value),
                   fifth_allowed_deviation: parseFloat(results.deviation),
-                  fifth_error: parseFloat(results.error),
-                  fifth_decision: results.satisfies,
                   fifth_measured_value: parseFloat(results.measured),
+                });
+                viewPager.current?.setPage(8);
+              }}
+            />
+          </Question>
+        </Box>
+        <Box key="9">
+          <Question title="Sixth flow measurment">
+            <FlowMeasurements
+              defValue={measurementsSix.sixth_set_value + ''}
+              defDeviation={measurementsSix.sixth_allowed_deviation + ''}
+              onDone={results => {
+                setMeasurementsSix({
+                  sixth_set_value: parseFloat(results.value),
+                  sixth_allowed_deviation: parseFloat(results.deviation),
+                  sixth_measured_value: parseFloat(results.measured),
                 });
                 handlePrediction({
                   device,
@@ -235,6 +237,7 @@ const Prediction = ({ navigation }) => {
                   ...measurementsThree,
                   ...measurementsFour,
                   ...measurementsFive,
+                  ...measurementsSix,
                 });
                 //viewPager.current?.setPage(7);
               }}
@@ -260,34 +263,22 @@ const Prediction = ({ navigation }) => {
           parameter_of_inspection: '',
           first_set_value: 0,
           first_measured_value: 0,
-          first_error: 0,
           first_allowed_deviation: 0,
-          first_decision: '',
           second_set_value: 0,
           second_measured_value: 0,
-          second_error: 0,
           second_allowed_deviation: 0,
-          second_decision: '',
           third_set_value: 0,
           third_measured_value: 0,
-          third_error: 0,
           third_allowed_deviation: 0,
-          third_decision: '',
           fourth_set_value: 0,
           fourth_measured_value: 0,
-          fourth_error: 0,
           fourth_allowed_deviation: 0,
-          fourth_decision: '',
           fifth_set_value: 0,
           fifth_measured_value: 0,
-          fifth_error: 0,
           fifth_allowed_deviation: 0,
-          fifth_decision: '',
           sixth_set_value: 0,
           sixth_measured_value: 0,
-          sixth_error: 0,
           sixth_allowed_deviation: 0,
-          sixth_decision: '',
         }}
         validationSchema={ValidationSchema}
         onSubmit={handlePrediction}
@@ -376,22 +367,8 @@ const Prediction = ({ navigation }) => {
                 borderColor="mainForeground"
                 borderWidth={1}
                 flexDirection={'row'}
-                value={values.first_error + ''}
-                onChangeText={handleChange('first_error')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
                 value={values.first_allowed_deviation + ''}
                 onChangeText={handleChange('first_allowed_deviation')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
-                value={values.first_decision + ''}
-                onChangeText={handleChange('first_decision')}
               />
               <MyTextInput
                 borderColor="mainForeground"
@@ -411,22 +388,8 @@ const Prediction = ({ navigation }) => {
                 borderColor="mainForeground"
                 borderWidth={1}
                 flexDirection={'row'}
-                value={values.second_error + ''}
-                onChangeText={handleChange('second_error')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
                 value={values.second_allowed_deviation + ''}
                 onChangeText={handleChange('second_allowed_deviation')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
-                value={values.second_decision + ''}
-                onChangeText={handleChange('second_decision')}
               />
               <MyTextInput
                 borderColor="mainForeground"
@@ -446,22 +409,8 @@ const Prediction = ({ navigation }) => {
                 borderColor="mainForeground"
                 borderWidth={1}
                 flexDirection={'row'}
-                value={values.third_error + ''}
-                onChangeText={handleChange('third_error')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
                 value={values.third_allowed_deviation + ''}
                 onChangeText={handleChange('third_allowed_deviation')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
-                value={values.third_decision + ''}
-                onChangeText={handleChange('third_decision')}
               />
               <MyTextInput
                 borderColor="mainForeground"
@@ -481,22 +430,8 @@ const Prediction = ({ navigation }) => {
                 borderColor="mainForeground"
                 borderWidth={1}
                 flexDirection={'row'}
-                value={values.fourth_error + ''}
-                onChangeText={handleChange('fourth_error')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
                 value={values.fourth_allowed_deviation + ''}
                 onChangeText={handleChange('fourth_allowed_deviation')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
-                value={values.fourth_decision + ''}
-                onChangeText={handleChange('fourth_decision')}
               />
               <MyTextInput
                 borderColor="mainForeground"
@@ -516,22 +451,8 @@ const Prediction = ({ navigation }) => {
                 borderColor="mainForeground"
                 borderWidth={1}
                 flexDirection={'row'}
-                value={values.fifth_error + ''}
-                onChangeText={handleChange('fifth_error')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
                 value={values.fifth_allowed_deviation + ''}
                 onChangeText={handleChange('fifth_allowed_deviation')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
-                value={values.fifth_decision + ''}
-                onChangeText={handleChange('fifth_decision')}
               />
               <MyTextInput
                 borderColor="mainForeground"
@@ -551,22 +472,8 @@ const Prediction = ({ navigation }) => {
                 borderColor="mainForeground"
                 borderWidth={1}
                 flexDirection={'row'}
-                value={values.sixth_error + ''}
-                onChangeText={handleChange('sixth_error')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
                 value={values.sixth_allowed_deviation + ''}
                 onChangeText={handleChange('sixth_allowed_deviation')}
-              />
-              <MyTextInput
-                borderColor="mainForeground"
-                borderWidth={1}
-                flexDirection={'row'}
-                value={values.sixth_decision + ''}
-                onChangeText={handleChange('sixth_decision')}
               />
               <Button
                 borderColor="mainForeground"

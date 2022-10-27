@@ -13,9 +13,7 @@ const CHOICES = [
 const Schema = Yup.object().shape({
   value: Yup.string().required(),
   measured: Yup.string().required(),
-  error: Yup.string().required(),
   deviation: Yup.string().required(),
-  satisfies: Yup.string().required(),
 });
 
 type Props = {
@@ -76,29 +74,12 @@ const FlowMeasurement = ({
               error={errors.measured}
             />
             <MyTextInput
-              label="Error [%]"
-              value={values.error}
-              onChangeText={handleChange('error')}
-              onBlur={handleBlur('error')}
-              touched={touched.error}
-              error={errors.error}
-            />
-            <MyTextInput
               label="Allowed deviation [%]"
               value={values.deviation}
               onChangeText={handleChange('deviation')}
               onBlur={handleBlur('deviation')}
               touched={touched.deviation}
               error={errors.deviation}
-            />
-            <Text variant="sectionHeading" color="mainForeground">
-              {'Satisfies?'}
-            </Text>
-            <Select
-              horizontal
-              choices={CHOICES}
-              selected={values.satisfies}
-              onSelect={handleChange('satisfies')}
             />
             <Button
               disabled={!isValid}
